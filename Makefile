@@ -1,10 +1,17 @@
+BASE_CMD = uvicorn todo:app
+
 .PHONY: dev
 dev:
-	@uvicorn todo:app --reload
+	@$(BASE_CMD) --reload
 
 .PHONY: start
 start:
-	@uvicorn todo:app
+	@$(BASE_CMD)
 
-.PHONY:
+.PHONY: format
+format:
 	@yapf -i todo.py
+
+.PHONY: test
+test:
+	./test.sh
