@@ -1,4 +1,4 @@
-BASE_CMD = uvicorn todo:app
+BASE_CMD = uvicorn todo:app --port 8000
 
 .PHONY: dev
 dev:

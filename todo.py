@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
+import signal
+import sys
 
 app = FastAPI()
 
@@ -97,3 +99,12 @@ async def delete_task(task_id: int):
       deleted_task = tasks.pop(index)
       return {"message": "Task deleted", "task": deleted_task}
   return {"error": "Task not Found"}
+
+
+def signal_handler(signum, frame):
+  print("Received shutdown signal")
+  sys.exit(0)
+
+
+signal.signal(signal.SIGINT, signal_handler)
+signal.signal(signal.SIGTERM, signal_handler)
