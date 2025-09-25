@@ -22,6 +22,20 @@ hello_msg = """
             """
 
 
+@app.get("/name")
+async def welcome():
+  name_page = """
+    <html>
+        <head><title>Главная страница</title></head>
+        <body>
+            <h1>Добро пожаловать в FastAPI приложение!</h1>
+            <p>Рыбкин Даниил Алексеевич ИП314</p>
+        </body>
+    </html>
+    """
+  return HTMLResponse(content=name_page)
+
+
 @app.get("/")
 async def welcome():
   welcome_page = """
