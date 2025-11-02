@@ -1,6 +1,6 @@
 image: docker:cli
 
-sevices:
+services:
   - docker:dind
 
 stages:
