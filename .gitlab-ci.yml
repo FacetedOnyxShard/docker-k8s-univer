@@ -1,22 +1,24 @@
-image: docker:cli
-
-services:
-  - docker:dind
-
 stages:
   - build
   - test
 
 build-job:
   stage: build
+  image: docker:cli
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - docker build -t $CI_REGISTRY_IMAGE:latest .
-    - docker push $CI_REGISTRY_IMAGE:latest
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
   only:
     - lab2
 
 test-job:
   stage: test
-  image: $CI_REGISTRY_IMAGE:latest
+  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
   script:
     - ./test.sh
+  dependencies:
+    - build
