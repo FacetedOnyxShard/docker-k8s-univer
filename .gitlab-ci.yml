@@ -7,7 +7,7 @@ build-job:
   services:
     - docker:dind
   before_script:
-    - docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY <<< "$CI_REGISTRY_PASSWORD"
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
     - |
       docker buildx create --name multiarch --use
       docker buildx inspect --bootstrap
