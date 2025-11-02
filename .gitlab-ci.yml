@@ -21,4 +21,4 @@ test-job:
   script:
     - ./test.sh
   dependencies:
-    - build
+    - build-job
