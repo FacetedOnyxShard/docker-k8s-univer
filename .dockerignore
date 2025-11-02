@@ -4,5 +4,4 @@ myvenv
 .gitignore
 dockerfile
 __pycache__
-test.sh
 Makefile
