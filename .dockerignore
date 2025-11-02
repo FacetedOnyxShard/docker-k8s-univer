@@ -1,5 +1,8 @@
+myvenv
+
 .style.yapf
 .gitignore
 dockerfile
-.venv
 __pycache__
+test.sh
+Makefile
