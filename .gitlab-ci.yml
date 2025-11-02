@@ -10,11 +10,13 @@ stages:
 build-job:
   stage: build
   script:
-    - docker build -t hikaruvi/images/univer-simpleapi-app .
+    - docker build -t $CI_REGISTRY_IMAGE:latest .
+    - docker push $CI_REGISTRY_IMAGE:latest
+  only:
+    - lab2
 
 test-job:
   stage: test
+  image: $CI_REGISTRY_IMAGE:latest
   script:
-    - >
-      docker run --rm hikaruvi/images/univer-simpleapi-app
-      ./test.sh
+    - ./test.sh
