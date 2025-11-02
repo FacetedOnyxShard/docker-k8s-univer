@@ -8,11 +8,9 @@ build-job:
     - docker:dind
   before_script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+    - docker context create ci
     - |
-      docker context create dind-context
-      docker context use dind-context
-    - |
-      docker buildx create --name multiarch --use
+      docker buildx create --name multiarch --use ci
       docker buildx inspect --bootstrap
   script:
     - IMAGE_TAG = ${CI_COMMIT_TAG:-$CI_COMMIT_SHORT_SHA}
