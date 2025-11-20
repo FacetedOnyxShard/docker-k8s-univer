@@ -55,6 +55,18 @@ async def welcome():
     """
   return HTMLResponse(content=welcome_page)
 
+@app.get("/new")
+async def new():
+  new_page = """
+    <html>
+        <head><title>Главная страница</title></head>
+        <body>
+            <h1>Это новое содержимое страницы я добавил его на паре для сдачи 3ей лабы</h1>
+        </body>
+    </html>
+    """
+  return HTMLResponse(content=new_page)
+
 
 @app.get("/tasks")
 async def get_all_tasks():
