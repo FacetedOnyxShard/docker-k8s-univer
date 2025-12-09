@@ -43,6 +43,8 @@ deploy-to-hawk:
       mkdir -p ~/.kube
       echo "$KUBECONFIG" > ~/.kube/config
 
+    - kubectl -n $NAMESPACE config current-context
+
     - kubectl -n $NAMESPACE apply -f $MANIFEST_DIR/
 
     - kubectl get all -n $KUBE_NAMESPACE | grep s21
