@@ -41,7 +41,7 @@ deploy-to-hawk:
   before_script:
     - which kubectl
     - kubectl version --client
-    - echo "KUBECONFIG length: ${#KUBECONFIG}"
+    - echo ${#KUBECONFIG}
     - ls -la $MANIFEST_DIR/
   script:
     - |
@@ -82,6 +82,6 @@ deploy-to-hawk:
       kubectl get all -n $NAMESPACE | grep s21 || echo "Ресурсы s21 не найдены"
   rules:
     - if: $CI_COMMIT_TAG
-      when: on_success
+      when: manual
     - if: $CI_COMMIT_BRANCH
       when: manual
