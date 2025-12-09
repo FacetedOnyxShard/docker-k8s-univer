@@ -44,6 +44,7 @@ deploy-to-hawk:
       echo "manifest_dir: $MANIFEST_DIR"
       echo "image: $FULL_IMAGE"
 
+    - |
       mkdir -p ~/.kube
       echo "$KUBECONFIG" > ~/.kube/config
 
