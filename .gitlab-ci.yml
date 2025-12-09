@@ -40,14 +40,20 @@ deploy-to-hawk:
     MANIFEST_DIR: "./k8s"
   script:
     - |
+      echo "namespace: $NAMESPACE"
+      echo "manifest_dir: $MANIFEST_DIR"
+      echo "image: $FULL_IMAGE"
+
       mkdir -p ~/.kube
       echo "$KUBECONFIG" > ~/.kube/config
+
+    - kubectl -n $NAMESPACE config use-context hawk-dev
 
     - kubectl -n $NAMESPACE config current-context
 
     - kubectl -n $NAMESPACE apply -f $MANIFEST_DIR/
 
-    - kubectl get all -n $KUBE_NAMESPACE | grep s21
+    - kubectl get all -n $NAMESPACE | grep s21
   rules:
     - if: $CI_COMMIT_TAG
       when: on_success
