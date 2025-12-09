@@ -41,7 +41,7 @@ deploy-to-hawk:
   before_script:
     - which kubectl
     - kubectl version --client
-    - echo ${#KUBECONFIG}
+    - echo ${KUBECONFIG}
     - ls -la $MANIFEST_DIR/
   script:
     - |
