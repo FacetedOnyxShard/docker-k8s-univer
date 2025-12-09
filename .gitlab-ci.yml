@@ -1,5 +1,6 @@
 stages:
   - build
+  - deploy
 
 build-job:
   stage: build
@@ -20,9 +21,30 @@ build-job:
       -t $HAWK_REGISTRY_IMAGE:$IMAGE_TAG
       -t $HAWK_REGISTRY_IMAGE:latest
       --push .
-    - echo $HAWK_REGISTRY_IMAGE:$IMAGE_TAG
+    - echo "FULL_IMAGE=${HAWK_REGISTRY_IMAGE}:${IMAGE_TAG}" > build.env
   rules:
     - if: $CI_COMMIT_TAG
       when: on_success
     - if: $CI_COMMIT_BRANCH
       when: manual
+  artifacts:
+    reports:
+      dotenv: build.env
+
+deploy-to-hawk:
+  stage: deploy
+  image: registry.csc.sibsutis.ru/csc-public/internal-container-images/k8s-tools:latest
+  needs: ["build-job"]
+  variables:
+    NAMESPACE: "ip314"
+    MANIFEST_DIR: "./k8s"
+  script:
+    - |
+      mkdir -p ~/.kube
+      echo "$KUBECONFIG" > ~/.kube/config
+
+    - kubectl -n $NAMESPACE apply -f $MANIFEST_DIR/
+
+    - kubectl get all -n $KUBE_NAMESPACE | grep s21
+  rules:
+    when: manual

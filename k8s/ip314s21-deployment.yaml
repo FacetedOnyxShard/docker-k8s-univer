@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ip314s21-app
+  namespace: ip314
+  labels:
+    owner: ip314s21
+    app: ip314s21-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ip314s21-app
+  template:
+    metadata:
+      labels:
+        app: ip314s21-app
+        owner: ip314s21
+    spec:
+      containers:
+        - name: ip314s21-fastapi-python-application
+          image: cr.hawk.csc.sibsutis.ru/hawk-dev/ip314s21-ada-labs-rybkin-ip314:v3.0.2
+          ports:
+            - containerPort: 8000
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "200m"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 1
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 1000
+            capabilities:
+              drop:
+                - ALL

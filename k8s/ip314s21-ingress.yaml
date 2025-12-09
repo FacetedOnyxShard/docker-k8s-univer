@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ip314s21-ingress
+  namespace: ip314
+  labels:
+    app: ip314s21-app
+    owner: ip314s21
+spec:
+  ingressClassName: traefik-dev
+  rules:
+    - host: ip314s21-fastapi-application.hawk-dev.csc.sibsutis.ru
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ip314s21-service
+                port:
+                  number: 80
