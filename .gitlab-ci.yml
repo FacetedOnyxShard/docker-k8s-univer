@@ -1,5 +1,6 @@
 stages:
   - build
+  - diff
   - deploy
 
 build-job:
@@ -31,13 +32,14 @@ build-job:
     reports:
       dotenv: build.env
 
-deploy-to-hawk:
-  stage: deploy
+diff-job:
+  stage: diff
   image: registry.csc.sibsutis.ru/csc-public/internal-container-images/k8s-tools:latest
   needs: ["build-job"]
   variables:
     NAMESPACE: "ip314"
-    MANIFEST_DIR: "./k8s"
+    CHART_DIR: "./chart"
+    DIFF_FILE: "helm-diff.txt"
   before_script:
     - |
       mkdir -p ~/.kube/
@@ -46,7 +48,41 @@ deploy-to-hawk:
       echo "Kubeconfig создан"
   script:
     - >
-      helm upgrade --install ip314s21-app ./chart
+      echo "==== Diff для Helm релиза ===="
+      helm diff upgrade ip314s21 $CHART_DIR
+      --namespace $NAMESPACE
+      --set image.repository=$HAWK_REGISTRY_IMAGE
+      --set image.tag=${CI_COMMIT_TAG:-$CI_COMMIT_SHORT_SHA} > $DIFF_FILE
+
+    - cat $DIFF_FILE
+
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: manual
+    - if: $CI_COMMIT_BRANCH
+      when: manual
+
+  artifacts:
+    paths:
+      - $DIFF_FILE
+    when: always
+
+deploy-to-hawk:
+  stage: deploy
+  image: registry.csc.sibsutis.ru/csc-public/internal-container-images/k8s-tools:latest
+  needs: ["build-job"]
+  variables:
+    NAMESPACE: "ip314"
+    CHART_DIR: "./chart"
+  before_script:
+    - |
+      mkdir -p ~/.kube/
+      cp "$KUBECONFIG" ~/.kube/config
+      chmod 600 ~/.kube/config
+      echo "Kubeconfig создан"
+  script:
+    - >
+      helm upgrade --install ip314s21-app $CHART_DIR
       --namespace $NAMESPACE
       --set image.repository=$HAWK_REGISTRY_IMAGE
       --set image.tag=${CI_COMMIT_TAG:-$CI_COMMIT_SHORT_SHA}
