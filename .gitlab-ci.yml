@@ -39,18 +39,18 @@ deploy-to-hawk:
     NAMESPACE: "ip314"
     MANIFEST_DIR: "./k8s"
   before_script:
-    - which kubectl
-    - kubectl version --client
-    - ls -la $MANIFEST_DIR/
-  script:
     - |
-      echo "=== Шаг 1: Настройка kubeconfig ==="
       mkdir -p ~/.kube/
       cp "$KUBECONFIG" ~/.kube/config
       chmod 600 ~/.kube/config
       echo "Kubeconfig создан"
-
-    - kubectl -n $NAMESPACE apply -f $MANIFEST_DIR/
+  script:
+    - >
+      helm upgrade --install ip314s21-app ./chart
+      --namespace $NAMESPACE
+      --set image.repository=$HAWK_REGISTRY_IMAGE
+      --set image.tag=${CI_COMMIT_TAG:-$CI_COMMIT_SHORT_SHA}
+      --set image.name=$FULL_IMAGE
 
     - kubectl get all -n $NAMESPACE | grep s21 || echo "Ресурсы s21 не найдены"
   rules:

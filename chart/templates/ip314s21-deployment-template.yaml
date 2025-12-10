@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.name }}-deployment
+  namespace: {{ .Values.namespace }}
+  labels:
+    owner: ip314s21
+    app: {{ .Chart.name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.name }}
+        owner: ip314s21
+    spec:
+      containers:
+        - name: {{ .Chart.name }}
+          image: {{ .Values.name }}
+          ports:
+            - containerPort: {{ .Values.ports.containerPort }}
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "200m"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.ports.containerPort }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.ports.containerPort }}
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 1
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 1000
+            capabilities:
+              drop:
+                - ALL
