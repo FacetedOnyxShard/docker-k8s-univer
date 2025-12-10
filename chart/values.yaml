@@ -5,3 +5,7 @@ image:
 
 ports:
   containerPort: 8000
+
+application:
+  hostSuffix: application.hawk-dev.csc.sibsutis.ru
+  port: 80
