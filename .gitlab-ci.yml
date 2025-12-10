@@ -4,7 +4,7 @@ stages:
   - deploy
 
 variables:
-  APP_NAME: "ip314s21-app"
+  APP_NAME: "ip314s21-todo"
   NAMESPACE: "ip314"
   CHART_DIR: "./chart"
 
