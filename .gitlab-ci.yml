@@ -54,11 +54,11 @@ diff-job:
       helm diff upgrade $APP_NAME $CHART_DIR
       --namespace $NAMESPACE
       --set image.repository=$HAWK_REGISTRY_IMAGE
-      --set image.tag=${CI_COMMIT_TAG:-$CI_COMMIT_SHORT_SHA} > $DIFF_FILE
-      --atomic
+      --set image.tag=${CI_COMMIT_TAG:-$CI_COMMIT_SHORT_SHA}
+      --atomic > $DIFF_FILE || true
 
     - echo "==== Diff для Helm релиза ===="
-    - cat $DIFF_FILE
+    - cat $DIFF_FILE || true
 
   rules:
     - if: $CI_COMMIT_TAG
