@@ -45,7 +45,8 @@ deploy-to-hawk:
   script:
     - |
       echo "=== Шаг 1: Настройка kubeconfig ==="
-      cp "$KUBECONFIG_FILE" ~/.kube/config
+      mkdir -p ~/.kube/
+      cp "$KUBECONFIG" ~/.kube/config
       chmod 600 ~/.kube/config
       echo "Kubeconfig создан"
 
