@@ -1,25 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.name }}-deployment
-  namespace: {{ .Values.namespace }}
+  name: {{ .Chart.Name }}-deployment
   labels:
     owner: ip314s21
-    app: {{ .Chart.name }}
+    app: {{ .Chart.Name }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Chart.name }}
+      app: {{ .Chart.Name }}
   template:
     metadata:
       labels:
-        app: {{ .Chart.name }}
+        app: {{ .Chart.Name }}
         owner: ip314s21
     spec:
       containers:
-        - name: {{ .Chart.name }}
-          image: {{ .Values.name }}
+        - name: {{ .Chart.Name }}
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           ports:
             - containerPort: {{ .Values.ports.containerPort }}
           resources:

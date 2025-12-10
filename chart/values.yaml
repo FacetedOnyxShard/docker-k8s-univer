@@ -2,9 +2,6 @@ replicaCount: 1
 image:
   repository: ""
   tag: "latest"
-  name: ""
 
 ports:
   containerPort: 8000
-
-namespace: "ip314"
